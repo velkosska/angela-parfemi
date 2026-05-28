@@ -2,6 +2,7 @@
 import { notFound } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import ProductDetail from "@/components/ProductDetail";
+import RecommendedPerfumes from "@/components/RecommendedPerfumes";
 import Footer from "@/components/Footer";
 import { getPerfumeById } from "@/data/products";
 
@@ -17,6 +18,7 @@ export default function PerfumePage({ params }: Props) {
     <main>
       <Navbar />
       <ProductDetail perfume={perfume} />
+      <RecommendedPerfumes currentId={perfume.id} />
       <Footer />
     </main>
   );

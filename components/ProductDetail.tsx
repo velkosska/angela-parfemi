@@ -41,7 +41,7 @@ export default function ProductDetail({ perfume }: Props) {
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: "var(--cream)" }}>
       <div
-        className="sticky top-0 z-30 flex items-center px-5 lg:px-10 py-4 bg-white/95 backdrop-blur-sm"
+        className="sticky top-14 lg:top-16 z-30 flex items-center px-5 lg:px-10 py-4 bg-white/95 backdrop-blur-sm"
         style={{ borderBottom: "1px solid var(--border)" }}
       >
         <Link

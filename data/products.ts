@@ -126,3 +126,13 @@ export const getPerfumesByCategory = (category: string) =>
   category === "all" ? perfumes : perfumes.filter((p) => p.category === category);
 
 export const getPerfumeById = (id: string) => perfumes.find((p) => p.id === id);
+
+export const getRecommendedPerfumes = (currentId: string, limit = 4) => {
+  const current = getPerfumeById(currentId);
+  const others = perfumes.filter((p) => p.id !== currentId);
+  const sameCategory = current
+    ? others.filter((p) => p.category === current.category)
+    : [];
+  const rest = others.filter((p) => !sameCategory.some((s) => s.id === p.id));
+  return [...sameCategory, ...rest].slice(0, limit);
+};

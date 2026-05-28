@@ -1,18 +1,22 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useCart } from "@/context/CartContext";
+import { homeHref } from "@/lib/nav";
 
 export default function Footer() {
   const pathname = usePathname();
+  const { cart, openCart, openCheckout } = useCart();
+  const isHome = pathname === "/";
 
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  const handleOrder = () => {
+    if (cart.length > 0) openCheckout();
+    else openCart();
   };
 
   const navItems = [
-    ["collection", "Колекција"],
-    ["about", "За Нас"],
-    ["order", "Нарачај"],
+    { href: homeHref("collection"), label: "Колекција" },
+    { href: homeHref("about"), label: "За Нас" },
   ] as const;
 
   return (
@@ -20,24 +24,26 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 mb-10">
           <div>
-            <div
-              className="text-[7px] tracking-[0.35em] uppercase mb-0.5 font-[200]"
-              style={{ fontFamily: "var(--font-sans)", color: "var(--gold)" }}
-            >
-              AI
-            </div>
-            <div
-              className="text-lg tracking-[0.25em] uppercase font-[300] mb-1"
-              style={{ fontFamily: "var(--font-serif)" }}
-            >
-              Angela
-            </div>
-            <div
-              className="text-[8px] tracking-[0.4em] uppercase mb-4 font-[200]"
-              style={{ fontFamily: "var(--font-sans)", color: "rgba(255,255,255,0.3)" }}
-            >
-              Parfemi
-            </div>
+            <Link href="/" className="no-underline inline-block">
+              <div
+                className="text-[7px] tracking-[0.35em] uppercase mb-0.5 font-[200]"
+                style={{ fontFamily: "var(--font-sans)", color: "var(--gold)" }}
+              >
+                AI
+              </div>
+              <div
+                className="text-lg tracking-[0.25em] uppercase font-[300] mb-1"
+                style={{ fontFamily: "var(--font-serif)" }}
+              >
+                Angela
+              </div>
+              <div
+                className="text-[8px] tracking-[0.4em] uppercase mb-4 font-[200]"
+                style={{ fontFamily: "var(--font-sans)", color: "rgba(255,255,255,0.3)" }}
+              >
+                Parfemi
+              </div>
+            </Link>
             <p
               className="text-[11px] font-[300] leading-relaxed max-w-xs"
               style={{ fontFamily: "var(--font-sans)", color: "rgba(255,255,255,0.4)" }}
@@ -55,7 +61,7 @@ export default function Footer() {
             </p>
             <a
               href="tel:075263594"
-              className="flex items-center gap-2 text-sm font-[400] mb-3 hover:text-[var(--gold)] transition-colors"
+              className="flex items-center gap-2 text-sm font-[400] mb-3 hover:text-[var(--gold)] transition-colors no-underline"
               style={{ fontFamily: "var(--font-sans)" }}
             >
               📞 075 263 594
@@ -81,26 +87,34 @@ export default function Footer() {
             >
               Навигација
             </p>
-            {navItems.map(([id, label]) =>
-              pathname === "/" ? (
-                <button
-                  key={id}
-                  onClick={() => scrollTo(id)}
-                  className="block text-[11px] font-[300] mb-3 hover:text-[var(--gold)] transition-colors text-left"
-                  style={{ fontFamily: "var(--font-sans)", color: "rgba(255,255,255,0.5)" }}
-                >
-                  {label}
-                </button>
-              ) : (
-                <Link
-                  key={id}
-                  href={`/#${id}`}
-                  className="block text-[11px] font-[300] mb-3 hover:text-[var(--gold)] transition-colors no-underline"
-                  style={{ fontFamily: "var(--font-sans)", color: "rgba(255,255,255,0.5)" }}
-                >
-                  {label}
-                </Link>
-              )
+            {navItems.map(({ href, label }) => (
+              <Link
+                key={label}
+                href={href}
+                className="block text-[11px] font-[300] mb-3 hover:text-[var(--gold)] transition-colors no-underline"
+                style={{ fontFamily: "var(--font-sans)", color: "rgba(255,255,255,0.5)" }}
+              >
+                {label}
+              </Link>
+            ))}
+            {isHome ? (
+              <button
+                type="button"
+                onClick={handleOrder}
+                className="block text-[11px] font-[300] mb-3 hover:text-[var(--gold)] transition-colors text-left"
+                style={{ fontFamily: "var(--font-sans)", color: "rgba(255,255,255,0.5)" }}
+              >
+                Нарачај
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleOrder}
+                className="block text-[11px] font-[300] mb-3 hover:text-[var(--gold)] transition-colors text-left"
+                style={{ fontFamily: "var(--font-sans)", color: "rgba(255,255,255,0.5)" }}
+              >
+                Нарачај
+              </button>
             )}
           </div>
         </div>

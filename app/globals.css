@@ -1,0 +1,184 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --gold: #B8972E;
+  --gold-light: #D4AF50;
+  --gold-dark: #8B6914;
+  --cream: #FDFAF5;
+  --cream-2: #F5EFE0;
+  --onyx: #111111;
+  --onyx-light: #3A3A3A;
+  --mid: #6B6B6B;
+  --border: #E5DDD0;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Jost', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--cream);
+  color: var(--onyx);
+  font-family: var(--font-sans);
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* Reveal on scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* Gold shimmer */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+.gold-shimmer {
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold-light), var(--gold), var(--gold-light), var(--gold-dark));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3.5s linear infinite;
+}
+
+/* Divider */
+.divider { height: 1px; background: var(--border); }
+.gold-line { height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+
+/* Buttons */
+.btn-dark {
+  background: var(--onyx);
+  color: white;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 11px;
+  padding: 15px 36px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.25s ease, transform 0.2s ease;
+  width: 100%;
+  justify-content: center;
+}
+.btn-dark:hover { background: var(--onyx-light); transform: translateY(-1px); }
+.btn-dark:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--onyx);
+  color: var(--onyx);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 11px;
+  padding: 13px 32px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+}
+.btn-outline:hover { background: var(--onyx); color: white; }
+
+.btn-gold {
+  background: var(--gold);
+  color: white;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 11px;
+  padding: 15px 36px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.25s, transform 0.2s;
+  width: 100%;
+  justify-content: center;
+}
+.btn-gold:hover { background: var(--gold-dark); transform: translateY(-1px); }
+
+/* Size selector */
+.size-btn {
+  border: 1px solid var(--border);
+  background: white;
+  padding: 9px 18px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--onyx);
+  border-radius: 2px;
+  min-width: 64px;
+  text-align: center;
+}
+.size-btn:hover { border-color: var(--onyx); }
+.size-btn.active { background: var(--onyx); border-color: var(--onyx); color: white; }
+
+/* Qty selector */
+.qty-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border);
+  background: white;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  color: var(--onyx);
+  font-weight: 300;
+}
+.qty-btn:hover { border-color: var(--onyx); }
+
+/* Luxury input */
+.luxury-input {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 13px 16px;
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 14px;
+  color: var(--onyx);
+  width: 100%;
+  outline: none;
+  transition: border-color 0.25s;
+  -webkit-appearance: none;
+}
+.luxury-input:focus { border-color: var(--onyx); }
+.luxury-input::placeholder { color: #aaa; }
+
+/* Card hover */
+.product-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+.product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--cream); }
+::-webkit-scrollbar-thumb { background: var(--border); }
+
+/* Mobile tap highlight */
+button, a { -webkit-tap-highlight-color: transparent; }

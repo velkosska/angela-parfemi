@@ -2,13 +2,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Perfume } from "@/types";
-import { getFromPrice } from "@/lib/pricing";
+import { CollectionFormat, getFromPriceForFormat, productHref } from "@/lib/formats";
 
 interface Props {
   perfume: Perfume;
+  format?: CollectionFormat;
 }
 
-export default function ProductCard({ perfume }: Props) {
+export default function ProductCard({ perfume, format = "edp" }: Props) {
   const categoryLabel =
     perfume.category === "woman"
       ? "За Жени"
@@ -16,8 +17,11 @@ export default function ProductCard({ perfume }: Props) {
         ? "За Мажи"
         : "Унисекс";
 
+  const isOil = format === "oil";
+  const fromPrice = getFromPriceForFormat(perfume, format);
+
   return (
-    <Link href={`/parfem/${perfume.id}`} className="block no-underline">
+    <Link href={productHref(perfume.id, format)} className="block no-underline">
       <div className="product-card bg-white flex flex-col">
         <div
           className="relative overflow-hidden group"
@@ -39,10 +43,10 @@ export default function ProductCard({ perfume }: Props) {
               border: "1px solid var(--border)",
             }}
           >
-            {categoryLabel}
+            {isOil ? "Oil 10ml" : categoryLabel}
           </span>
 
-          {perfume.featured && (
+          {perfume.featured && !isOil && (
             <span
               className="absolute top-3 right-3 text-[8px] tracking-[0.15em] uppercase px-2.5 py-1 font-[500]"
               style={{ fontFamily: "var(--font-sans)", background: "var(--gold)", color: "white" }}
@@ -81,7 +85,7 @@ export default function ProductCard({ perfume }: Props) {
             className="text-[11px] font-[300] leading-relaxed flex-1 mb-4 hidden lg:block"
             style={{ fontFamily: "var(--font-sans)", color: "var(--mid)" }}
           >
-            {perfume.description}
+            {isOil ? "Oil rolon · нанесување на кожа" : perfume.description}
           </p>
 
           <div
@@ -98,7 +102,7 @@ export default function ProductCard({ perfume }: Props) {
               className="text-lg lg:text-xl font-[400]"
               style={{ fontFamily: "var(--font-serif)", color: "var(--onyx)" }}
             >
-              {Math.min(...perfume.sizes.map(getFromPrice))}{" "}
+              {fromPrice}{" "}
               <span className="text-xs font-[300]" style={{ fontFamily: "var(--font-sans)" }}>
                 ден
               </span>

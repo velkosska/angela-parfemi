@@ -108,16 +108,6 @@ export const perfumes: Perfume[] = [
     imageEmoji: "🟠",
     sizes: DEFAULT_SIZES,
   },
-  {
-    id: "dolce-gabbana-light-blue",
-    name: "Light Blue",
-    brand: "Dolce & Gabbana",
-    category: "unisex",
-    description: "Медитеранска свежина. Чиста, светла и слободна.",
-    notes: ["Јаболко", "Кедар", "Мускус", "Амбра"],
-    imageEmoji: "💙",
-    sizes: DEFAULT_SIZES,
-  },
 ];
 
 export const featuredPerfumes = perfumes.filter((p) => p.featured);

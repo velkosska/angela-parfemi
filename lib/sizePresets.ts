@@ -17,14 +17,13 @@ export const SIZE_EDP_30: PerfumeSize = {
   price3: 1200,
 };
 
+/** Oil rolon 10ml — нанесување на кожа */
 export const SIZE_OIL_10: PerfumeSize = {
   ml: 10,
   type: "OIL",
-  price: 150,
-  price2: 600,
-  price3: 1200,
-  minQty: 5,
-  maxQty: 3,
+  price: 299,
+  price2: 550,
+  price3: 750,
 };
 
-export const DEFAULT_SIZES: PerfumeSize[] = [SIZE_EDP_50, SIZE_EDP_30, SIZE_OIL_10];
+export const DEFAULT_SIZES: PerfumeSize[] = [SIZE_EDP_30, SIZE_EDP_50, SIZE_OIL_10];

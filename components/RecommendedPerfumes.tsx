@@ -1,11 +1,16 @@
+"use client";
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { getRecommendedPerfumes } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
+import { parseCollectionFormat } from "@/lib/formats";
 
 interface Props {
   currentId: string;
 }
 
-export default function RecommendedPerfumes({ currentId }: Props) {
+function RecommendedInner({ currentId }: Props) {
+  const format = parseCollectionFormat(useSearchParams().get("format"));
   const recommended = getRecommendedPerfumes(currentId, 4);
   if (recommended.length === 0) return null;
 
@@ -31,10 +36,18 @@ export default function RecommendedPerfumes({ currentId }: Props) {
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           {recommended.map((perfume) => (
-            <ProductCard key={perfume.id} perfume={perfume} />
+            <ProductCard key={perfume.id} perfume={perfume} format={format} />
           ))}
         </div>
       </div>
     </section>
+  );
+}
+
+export default function RecommendedPerfumes({ currentId }: Props) {
+  return (
+    <Suspense fallback={null}>
+      <RecommendedInner currentId={currentId} />
+    </Suspense>
   );
 }

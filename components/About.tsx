@@ -50,14 +50,6 @@ export default function About() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 reveal" style={{ transitionDelay: "120ms" }}>
             {[
               {
-                type: "EDP · 50ml",
-                tiers: [
-                  ["1 парче", "600 ден"],
-                  ["2 парчиња", "1100 ден"],
-                  ["3 парчиња", "1500 ден"],
-                ],
-              },
-              {
                 type: "EDP · 30ml",
                 tiers: [
                   ["1 парче", "499 ден"],
@@ -66,11 +58,19 @@ export default function About() {
                 ],
               },
               {
-                type: "Oil · 10ml",
+                type: "EDP · 50ml",
                 tiers: [
-                  ["1 парче", "150 ден"],
-                  ["5 парчиња", "600 ден"],
-                  ["10 парчиња", "1200 ден"],
+                  ["1 парче", "600 ден"],
+                  ["2 парчиња", "1100 ден"],
+                  ["3 парчиња", "1500 ден"],
+                ],
+              },
+              {
+                type: "Oil Rolon · 10ml",
+                tiers: [
+                  ["1 парче", "299 ден"],
+                  ["2 парчиња", "550 ден"],
+                  ["3 парчиња", "750 ден"],
                 ],
               },
             ].map(sec => (
@@ -96,7 +96,7 @@ export default function About() {
 
           <p className="text-center text-[10px] font-[300] mt-6 reveal"
             style={{ fontFamily: "var(--font-sans)", color: "var(--mid)" }}>
-            Oil 10ml: нарачка само од 5 парчиња наваму (600 ден за 5 парчиња)
+            Oil rolon 10ml — ист мирис, за нанесување директно на кожата
           </p>
 
           <div className="mt-12 text-center reveal" style={{ transitionDelay: "200ms" }}>

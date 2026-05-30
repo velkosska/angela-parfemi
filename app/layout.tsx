@@ -5,7 +5,7 @@ import CartProvider from "@/components/CartProvider";
 export const metadata: Metadata = {
   title: "Angela Parfemi — Твојот потпис. Твојот мирис.",
   description:
-    "Премиум инспирирани парфеми со 99% сличност со оригиналот. EDP 50ml, 30ml и Oil 10ml. Достава 3-4 дена.",
+    "Премиум инспирирани парфеми со 99% сличност со оригиналот. EDP 30ml, 50ml и Oil rolon 10ml. Достава 3-4 дена.",
   keywords: ["парфеми", "angela parfemi", "инспирирани парфеми", "македонија"],
 };
 

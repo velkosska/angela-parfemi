@@ -1,9 +1,17 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Perfume, PerfumeSize } from "@/types";
 import { useCart } from "@/context/CartContext";
+import CollectionFormatPicker from "@/components/CollectionFormatPicker";
+import {
+  CollectionFormat,
+  getSizesForFormat,
+  parseCollectionFormat,
+  formatQueryParam,
+} from "@/lib/formats";
 import {
   getQtyOptions,
   getDefaultQty,
@@ -15,19 +23,45 @@ interface Props {
   perfume: Perfume;
 }
 
-export default function ProductDetail({ perfume }: Props) {
+function ProductDetailInner({ perfume }: Props) {
   const { addToCart } = useCart();
-  const [selectedSize, setSelectedSize] = useState<PerfumeSize>(perfume.sizes[0]);
-  const [qty, setQty] = useState(getDefaultQty(perfume.sizes[0]));
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const initialFormat = parseCollectionFormat(searchParams.get("format"));
+
+  const [format, setFormat] = useState<CollectionFormat>(initialFormat);
+  const formatSizes = getSizesForFormat(perfume, format);
+  const [selectedSize, setSelectedSize] = useState<PerfumeSize>(formatSizes[0]);
+  const [qty, setQty] = useState(getDefaultQty(formatSizes[0]));
 
   const qtyOptions = getQtyOptions(selectedSize);
   const price = getLinePrice(selectedSize, qty);
   const compareAt = getCompareAtPrice(selectedSize, qty);
-  const isOilBundle = (selectedSize.minQty ?? 1) > 1;
+  const isOil = format === "oil";
+
+  useEffect(() => {
+    const param = parseCollectionFormat(searchParams.get("format"));
+    setFormat(param);
+  }, [searchParams]);
+
+  useEffect(() => {
+    const sizes = getSizesForFormat(perfume, format);
+    const next = sizes[0];
+    if (next) {
+      setSelectedSize(next);
+      setQty(getDefaultQty(next));
+    }
+  }, [format, perfume]);
 
   useEffect(() => {
     setQty(getDefaultQty(selectedSize));
   }, [selectedSize]);
+
+  const handleFormatChange = (next: CollectionFormat) => {
+    setFormat(next);
+    const url = `/parfem/${perfume.id}?format=${formatQueryParam(next)}`;
+    router.replace(url, { scroll: false });
+  };
 
   const handleSizeChange = (size: PerfumeSize) => {
     setSelectedSize(size);
@@ -45,7 +79,7 @@ export default function ProductDetail({ perfume }: Props) {
         style={{ borderBottom: "1px solid var(--border)" }}
       >
         <Link
-          href="/#collection"
+          href={isOil ? "/?format=oil#collection" : "/#collection"}
           className="flex items-center gap-2 text-[10px] tracking-[0.18em] uppercase font-[400] transition-colors hover:text-[var(--gold)]"
           style={{ fontFamily: "var(--font-sans)", color: "var(--mid)" }}
         >
@@ -77,6 +111,14 @@ export default function ProductDetail({ perfume }: Props) {
           >
             {perfume.brand}
           </p>
+          {isOil && (
+            <span
+              className="absolute top-4 right-5 lg:right-8 text-[8px] tracking-[0.2em] uppercase px-3 py-1.5 font-[500]"
+              style={{ fontFamily: "var(--font-sans)", background: "var(--gold)", color: "white" }}
+            >
+              Oil Rolon 10ml
+            </span>
+          )}
         </div>
 
         <div className="flex-1 flex flex-col bg-white md:overflow-y-auto">
@@ -85,7 +127,7 @@ export default function ProductDetail({ perfume }: Props) {
               className="text-[9px] tracking-[0.3em] uppercase mb-2 font-[400]"
               style={{ fontFamily: "var(--font-sans)", color: "var(--mid)" }}
             >
-              Парфеми
+              {isOil ? "Oil rolon" : "Парфем"}
             </p>
 
             <h1
@@ -108,7 +150,9 @@ export default function ProductDetail({ perfume }: Props) {
               className="text-sm font-[300] leading-relaxed mb-6"
               style={{ fontFamily: "var(--font-sans)", color: "var(--mid)" }}
             >
-              {perfume.description}
+              {isOil
+                ? `${perfume.description} Oil rolon 10ml — за нанесување директно на кожата (ист мирис како EDP).`
+                : perfume.description}
             </p>
 
             <div className="flex flex-wrap gap-2 mb-8">
@@ -134,18 +178,40 @@ export default function ProductDetail({ perfume }: Props) {
               >
                 Тип
               </p>
-              <div className="flex gap-2 flex-wrap">
-                {perfume.sizes.map((size) => (
-                  <button
-                    key={`${size.type}-${size.ml}`}
-                    onClick={() => handleSizeChange(size)}
-                    className={`size-btn ${selectedSize === size ? "active" : ""}`}
-                  >
-                    {size.type} {size.ml}ml
-                  </button>
-                ))}
-              </div>
+              <CollectionFormatPicker value={format} onChange={handleFormatChange} className="!max-w-none" />
             </div>
+
+            {formatSizes.length > 1 && (
+              <div className="mb-6">
+                <p
+                  className="text-[9px] tracking-[0.25em] uppercase mb-3 font-[400]"
+                  style={{ fontFamily: "var(--font-sans)", color: "var(--mid)" }}
+                >
+                  Големина
+                </p>
+                <div className="flex gap-2 flex-wrap">
+                  {formatSizes.map((size) => (
+                    <button
+                      key={`${size.type}-${size.ml}`}
+                      type="button"
+                      onClick={() => handleSizeChange(size)}
+                      className={`size-btn ${selectedSize === size ? "active" : ""}`}
+                    >
+                      {size.type} {size.ml}ml
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {formatSizes.length === 1 && (
+              <p
+                className="text-sm font-[300] mb-6"
+                style={{ fontFamily: "var(--font-sans)", color: "var(--mid)" }}
+              >
+                {isOil ? "Oil rolon · 10ml" : `${selectedSize.type} ${selectedSize.ml}ml`}
+              </p>
+            )}
 
             <div className="mb-8">
               <p
@@ -154,18 +220,11 @@ export default function ProductDetail({ perfume }: Props) {
               >
                 Количина (парчиња)
               </p>
-              {isOilBundle && (
-                <p
-                  className="text-[10px] font-[300] mb-3"
-                  style={{ fontFamily: "var(--font-sans)", color: "var(--mid)" }}
-                >
-                  Oil 10ml: {selectedSize.price} ден по парче · нарачка минимум 5 парчиња (600 ден)
-                </p>
-              )}
               <div className="flex items-center gap-0 flex-wrap">
                 {qtyOptions.map((q) => (
                   <button
                     key={q}
+                    type="button"
                     onClick={() => setQty(q)}
                     className={`min-w-12 h-12 px-2 text-sm font-[400] border transition-all ${
                       qty === q
@@ -225,7 +284,7 @@ export default function ProductDetail({ perfume }: Props) {
                 )}
               </div>
 
-              <button onClick={handleAddToCart} className="btn-dark mb-3">
+              <button type="button" onClick={handleAddToCart} className="btn-dark mb-3">
                 Додај во Нарачка
               </button>
               <a
@@ -261,5 +320,13 @@ export default function ProductDetail({ perfume }: Props) {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ProductDetail({ perfume }: Props) {
+  return (
+    <Suspense fallback={<div className="min-h-dvh" style={{ background: "var(--cream)" }} />}>
+      <ProductDetailInner perfume={perfume} />
+    </Suspense>
   );
 }
